@@ -2,7 +2,9 @@ package org.helb.baseproject.model.user;
 
 import javax.persistence.*;
 
-@Entity
+import static javax.persistence.GenerationType.SEQUENCE;
+
+@Entity(name = "User")
 @Table
 public class User {
     @Id
@@ -12,7 +14,7 @@ public class User {
             allocationSize = 1
     )
     @GeneratedValue(
-            strategy = GenerationType.SEQUENCE,
+            strategy = SEQUENCE,
             generator = "user_sequence"
     )
     private Long id;

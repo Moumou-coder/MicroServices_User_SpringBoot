@@ -1,6 +1,8 @@
 package org.helb.baseproject.service;
 
 import org.helb.baseproject.model.user.User;
+import org.helb.baseproject.repo.UserRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -8,16 +10,15 @@ import java.util.List;
 @Service
 public class UserService {
 
+    private final UserRepository userRepository;
+
+    @Autowired // it enables automatic dependency injection
+    public UserService(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
+
+    //this method return list of users
     public List<User> getUsers (){
-        return List.of(
-                new User(
-                        1L,
-                        "Moumou",
-                        "Batmou",
-                        "DiamondBlack",
-                        "mail@hotmail.com",
-                        "TestPass"
-                )
-        );
+        return userRepository.findAll();
     }
 }

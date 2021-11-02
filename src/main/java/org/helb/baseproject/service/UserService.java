@@ -12,7 +12,7 @@ public class UserService {
 
     private final UserRepository userRepository;
 
-    @Autowired // it enables automatic dependency injection
+    @Autowired
     public UserService(UserRepository userRepository) {
         this.userRepository = userRepository;
     }

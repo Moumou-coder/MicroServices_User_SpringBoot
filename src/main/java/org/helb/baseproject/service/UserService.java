@@ -4,9 +4,10 @@ import org.helb.baseproject.model.user.User;
 import org.helb.baseproject.repo.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -40,5 +41,36 @@ public class UserService {
         userRepository.deleteById(userId);
 
 
+    }
+
+    @Transactional
+    public void updateUser(Long userId,
+                           String lastName,
+                           String firstName,
+                           String pseudo,
+                           String mail)
+    {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalStateException("user with id: " + userId + ", does not exist"));
+
+        if(lastName != null && lastName.length()>0 && !Objects.equals(user.getLastName(), lastName)){
+            user.setLastName(lastName);
+        }
+
+        if(firstName != null && firstName.length()>0 && !Objects.equals(user.getFirstName(), firstName)){
+            user.setFirstName(firstName);
+        }
+
+        if(pseudo != null && pseudo.length()>0 && !Objects.equals(user.getPseudo(), pseudo)){
+            user.setPseudo(pseudo);
+        }
+
+        if(mail != null && mail.length()>0 && !Objects.equals(user.getMail(), mail)){
+            Optional<User> userOptional = userRepository.findUserByMail(mail);
+            if (userOptional.isPresent()){
+                throw new IllegalStateException("mail taken");
+            }
+            user.setMail(mail);
+        }
     }
 }

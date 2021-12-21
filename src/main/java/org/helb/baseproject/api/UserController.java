@@ -1,5 +1,6 @@
-package org.helb.baseproject.model.user;
+package org.helb.baseproject.api;
 
+import org.helb.baseproject.model.user.User;
 import org.helb.baseproject.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;

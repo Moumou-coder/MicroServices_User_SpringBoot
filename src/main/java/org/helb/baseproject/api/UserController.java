@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("api/user/")
@@ -19,17 +20,22 @@ public class UserController {
     }
 
     @GetMapping
-    public List<User> getUsers (){
+    public List<User> getUsers() {
         return userService.getUsers();
     }
 
+    @GetMapping(path = "{userId}")
+    public Optional<User> getUserById(@PathVariable("userId") Long userId) {
+        return userService.getUserById(userId);
+    }
+
     @PostMapping
-    public void registerNewUser (@RequestBody User user){
+    public void registerNewUser(@RequestBody User user) {
         userService.addNewUser(user);
     }
 
     @DeleteMapping(path = "{userId}")
-    public void deleteUser(@PathVariable("userId") Long userId){
+    public void deleteUser(@PathVariable("userId") Long userId) {
         userService.deleteUser(userId);
     }
 
@@ -38,8 +44,7 @@ public class UserController {
                            @RequestParam(required = false) String lastName,
                            @RequestParam(required = false) String firstName,
                            @RequestParam(required = false) String pseudo,
-                           @RequestParam(required = false) String mail)
-    {
+                           @RequestParam(required = false) String mail) {
         userService.updateUser(userId, lastName, firstName, pseudo, mail);
     }
 }

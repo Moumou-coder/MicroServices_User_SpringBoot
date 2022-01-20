@@ -21,21 +21,32 @@ public class UserService {
     }
 
     //this method return list of users
-    public List<User> getUsers (){
+    public List<User> getUsers() {
         return userRepository.findAll();
     }
 
+    //get a user by id
+    public Optional<User> getUserById(Long userId) {
+        Optional<User> userOptional = userRepository.findById(userId);
+        if (userOptional.isEmpty()) {
+            throw new IllegalStateException("this user does not exist");
+        }
+        return userRepository.findById(userId);
+    }
+
+    //insert by email a new user
     public void addNewUser(User user) {
         Optional<User> userOptional = userRepository.findUserByMail(user.getMail());
-        if (userOptional.isPresent()){
+        if (userOptional.isPresent()) {
             throw new IllegalStateException("email already exists");
         }
         userRepository.save(user);
     }
 
+    //delete a user by id
     public void deleteUser(Long userId) {
         boolean exists = userRepository.existsById(userId);
-        if (!exists){
+        if (!exists) {
             throw new IllegalStateException("user with this id: " + userId + ", does not exists");
         }
         userRepository.deleteById(userId);
@@ -43,31 +54,31 @@ public class UserService {
 
     }
 
+    //upadate the information of a user
     @Transactional
     public void updateUser(Long userId,
                            String lastName,
                            String firstName,
                            String pseudo,
-                           String mail)
-    {
+                           String mail) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalStateException("user with id: " + userId + ", does not exist"));
 
-        if(lastName != null && lastName.length()>0 && !Objects.equals(user.getLastName(), lastName)){
+        if (lastName != null && lastName.length() > 0 && !Objects.equals(user.getLastName(), lastName)) {
             user.setLastName(lastName);
         }
 
-        if(firstName != null && firstName.length()>0 && !Objects.equals(user.getFirstName(), firstName)){
+        if (firstName != null && firstName.length() > 0 && !Objects.equals(user.getFirstName(), firstName)) {
             user.setFirstName(firstName);
         }
 
-        if(pseudo != null && pseudo.length()>0 && !Objects.equals(user.getPseudo(), pseudo)){
+        if (pseudo != null && pseudo.length() > 0 && !Objects.equals(user.getPseudo(), pseudo)) {
             user.setPseudo(pseudo);
         }
 
-        if(mail != null && mail.length()>0 && !Objects.equals(user.getMail(), mail)){
+        if (mail != null && mail.length() > 0 && !Objects.equals(user.getMail(), mail)) {
             Optional<User> userOptional = userRepository.findUserByMail(mail);
-            if (userOptional.isPresent()){
+            if (userOptional.isPresent()) {
                 throw new IllegalStateException("mail taken");
             }
             user.setMail(mail);
